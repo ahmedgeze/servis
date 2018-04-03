@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="">
+  <table class="table table-inverse table-dark table-bordered ">
+  <thead>
+    <tr >
+      <th class="bg-danger"  >USDT MARKET</th>
+      <th scope="col">Time</th>
+      <th scope="col">Coin</th>
+      <th scope="col">Last</th>
+      <th scope="col">Change</th>
+      <th scope="col">High</th>
+      <th scope="col">Low</th>
+      <th scope="col">Volume</th>
+      <th scope="col">Base Volume</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for x in dict.usdt %}
+      <td>{{ forloop.counter }}</td>
+      <td>{{x.time}}</td>
+      <td>{{x.koin_id__koin_name}}</td>
+      <td>{{x.last}}</td>
+      <td>{{x.change}}</td>
+      <td>{{x.high}}</td>
+      <td>{{x.low}}</td>
+      <td>{{x.volume}}</td>
+      <td>{{x.base_volume}}</td>
+
+    </tr>
+    {% endfor %}
+
+  </tbody>
+  </table>
+
+
+</div>
+
+<div class="">
+  <table class="table table-inverse table-dark table-bordered ">
+  <thead>
+    <tr >
+      <th class="bg-danger">ETH</th>
+      <th scope="col">Time</th>
+      <th scope="col">Coin</th>
+      <th scope="col">Last</th>
+      <th scope="col">Change</th>
+      <th scope="col">High</th>
+      <th scope="col">Low</th>
+      <th scope="col">Volume</th>
+      <th scope="col">Base Volume</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for x in dict.eth %}
+      <td>{{ forloop.counter }}</td>
+      <td>{{x.time}}</td>
+      <td>{{x.koin_id__koin_name}}</td>
+      <td>{{x.last}}</td>
+      <td>{{x.change}}</td>
+      <td>{{x.high}}</td>
+      <td>{{x.low}}</td>
+      <td>{{x.volume}}</td>
+      <td>{{x.base_volume}}</td>
+
+    </tr>
+    {% endfor %}
+
+  </tbody>
+  </table>
+
+
+</div>
+
+<div class="">
+  <table class="table table-inverse table-dark table-bordered ">
+  <thead>
+    <tr >
+      <th class="bg-danger">BTC</th>
+      <th scope="col">Time</th>
+      <th scope="col">Coin</th>
+      <th scope="col">Last</th>
+      <th scope="col">Change</th>
+      <th scope="col">High</th>
+      <th scope="col">Low</th>
+      <th scope="col">Volume</th>
+      <th scope="col">Base Volume</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for x in dict.btc %}
+      <td>{{ forloop.counter }}</td>
+      <td>{{x.time}}</td>
+      <td>{{x.koin_id__koin_name}}</td>
+      <td>{{x.last}}</td>
+      <td>{{x.change}}</td>
+      <td>{{x.high}}</td>
+      <td>{{x.low}}</td>
+      <td>{{x.volume}}</td>
+      <td>{{x.base_volume}}</td>
+
+    </tr>
+    {% endfor %}
+
+  </tbody>
+  </table>
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}
