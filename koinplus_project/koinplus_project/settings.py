@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = ['192.168.1.8']
+ALLOWED_HOSTS = ['192.168.1.7']
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.live.com'
 EMAIL_HOST_USER = 'xyz'

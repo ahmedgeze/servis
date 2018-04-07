@@ -10,6 +10,7 @@ from datetime import datetime
 class Kur(models.Model):
     kur_id = models.AutoField(primary_key=True)
     kur_name=models.CharField(max_length=10)
+    # kur_count=models.DecimalField(max_digits=5,decimal_places=1)
 
 
 

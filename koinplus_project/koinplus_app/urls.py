@@ -17,6 +17,7 @@ urlpatterns=[
     url(r'^showtopcoin$',views.showtopcoin,name='getTopCoin.html'),
     url(r'^returnTop25$',views.returntop25,name='returnTop25.html'),
     url(r'^top25/(?P<kur_type>\w{0,50})/$',views.top25,name='top25'),
+    url(r'^graphic/(?P<kur_type>\w{0,50})/(?P<koin_type>\w{0,50})$',views.graphicData,name='graphicData')
 
 
 ]

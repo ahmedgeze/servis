@@ -21,7 +21,11 @@ from django.core.mail import EmailMessage
 
 def index(request):
     # deneme()
+    control()
     deneme()
+    # Coin.objects.all().delete()
+    
+    # return JsonResponse(control(),safe=False)
     return render(request,'index.html',{})
 
 @api_view(['POST'])
@@ -176,7 +180,7 @@ def top25(request,kur_type):
 
 
 
-    coin_query=Price.objects.filter(kur_id=filter_code).order_by('-time').values('time','kur_id__kur_name','koin_id__koin_name','last','high','low','volume','base_volume','change')
+    coin_query=Price.objects.filter(kur_id=filter_code).order_by('-time','koin_id__koin_name').values('time','kur_id__kur_name','koin_id__koin_name','last','high','low','volume','base_volume','change')
     actual_query=coin_query[0:total_size]
     actual_list=list(actual_query)
 
@@ -185,6 +189,18 @@ def top25(request,kur_type):
     data= {
     'messages':info,
     'result':actual_list
+    }
+    return JsonResponse(data,safe=False)
+
+
+def graphicData(request,kur_type,koin_type):
+
+
+
+
+    data={
+        'kur':kur_type,
+        'koin':koin_type
     }
     return JsonResponse(data,safe=False)
 
