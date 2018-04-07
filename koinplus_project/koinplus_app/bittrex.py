@@ -16,6 +16,7 @@ from decimal import Decimal, DecimalException
 
 def deneme():
     threading.Timer(5.0,deneme).start()
+    #
     # Price.objects.all().delete()
     try:
 
@@ -33,72 +34,15 @@ def deneme():
         et=0
         us=0
 
-
-        if hash_date_hour==8 and hash_date_minute == 7 and hash_date_sec>0and hash_date_sec <60:
-             for x in range(len(data['result'])):
-                 hash_coin_twelve[data['result'][x]['Summary']['MarketName']]=data['result'][x]['Summary']['Last']
-                 pickle.dump(hash_coin_twelve,open('twelve.pickle','wb'))
-                 print(hash_coin_twelve)
-
-        else:
-                hash_dict=pickle.load(open('twelve.pickle','rb'))
-
-                for x in range(len(data['result'])):
-                    market_name=data['result'][x]['Summary']['MarketName']
-                    coin_name=market_name[4:len(market_name)]
-                    usd_coinname=market_name[5:len(market_name)]
-                    print("BTC:",bc,"ETH",et,"USDT",us)
-
-
-                    if str(data['result'][x]['Summary']['MarketName'][0:3]) == 'BTC':
-                        bc+=1
-                        btc=Price.objects.create(koin_id=Coin.objects.get(koin_name=str(coin_name)),
-                                                 kur_id=Kur.objects.get(kur_name="BTC"),
-                                                 last=data['result'][x]['Summary']['Last'],
-                                                 high=data['result'][x]['Summary']['High'],
-                                                 low=data['result'][x]['Summary']['Low'],
-                                                 time=start_date,
-                                                 base_volume=data['result'][x]['Summary']['BaseVolume'],
-                                                 volume=data['result'][x]['Summary']['Volume'],
-                                                 change=((data['result'][x]['Summary']['Last']-hash_dict[data['result'][x]['Summary']['MarketName']])*100)/data['result'][x]['Summary']['Last'])
-
-
-                    elif str(data['result'][x]['Summary']['MarketName'][0:3]) == 'ETH':
-                        et+=1
-                        eth=Price.objects.create(koin_id=Coin.objects.get(koin_name=str(coin_name)),
-                                                kur_id=Kur.objects.get(kur_name="ETH"),
-                                                last=data['result'][x]['Summary']['Last'],
-                                                high=data['result'][x]['Summary']['High'],
-                                                low=data['result'][x]['Summary']['Low'],
-                                                time=start_date,
-                                                base_volume=data['result'][x]['Summary']['BaseVolume'],
-                                                volume=data['result'][x]['Summary']['Volume'],
-                                                change=((data['result'][x]['Summary']['Last']-hash_dict[data['result'][x]['Summary']['MarketName']])*100)/data['result'][x]['Summary']['Last'])
-
-                    elif str(data['result'][x]['Summary']['MarketName'][0:4]) == 'USDT':
-                        us+=1
-                        usd=Price.objects.create(koin_id=Coin.objects.get(koin_name=str(usd_coinname)),
-                                               kur_id=Kur.objects.get(kur_name="USDT"),
-                                               last=data['result'][x]['Summary']['Last'],
-                                               high=data['result'][x]['Summary']['High'],
-                                               low=data['result'][x]['Summary']['Low'],
-                                               time=start_date,
-                                               base_volume=data['result'][x]['Summary']['BaseVolume'],
-                                               volume=data['result'][x]['Summary']['Volume'],
-                                               change=((data['result'][x]['Summary']['Last']-hash_dict[data['result'][x]['Summary']['MarketName']])*100)/data['result'][x]['Summary']['Last'])
+        pickle_twelve_control(hash_date_hour,hash_date_minute,hash_date_sec,len(data['result']),hash_coin_twelve,'twelve_pickle',data)
+        twelve_pickle=pickle.load(open('twelve.pickle','rb'))
+        price_dbsave(data,twelve_pickle,start_date)
 
 
 
+    except Exception as e:   #ValueError as e1, TypeError, DecimalException
+        print (e)
 
-
-
-
-
-    except (ValueError, TypeError, DecimalException):
-        print(self.error_message)
-
-
-    print("BTC:",bc,"ETH",et,"USDT",us)
     return "BAŞARILI"
 
 
@@ -139,6 +83,75 @@ def control():
         print(btcCount,"btc")
         print(ethCount,"eth")
         print(usdtCount,"usd")
+
+
+
+def pickle_twelve_control(hour,minute,seconds,length,picklefile,picklefile_name,datas):
+    if hour==12 and minute==0 and seconds>1 and seconds<10:
+        count=0
+        for x in range(0,length,1):
+            picklefile[datas['result'][x]['MarketName']]=datas['result'][x]['Summary']['Last']
+            count+=1
+            pickle.dump(picklefile,open(picklefile_name,'wb'))
+        print("Pickle File Güncellendi",count)
+
+
+def price_dbsave(datas,pickle_file,starting_time):
+    bc=0
+    et=0
+    us=0
+    for x in range(0,len(datas['result']),1):
+        market_name=datas['result'][x]['Summary']['MarketName']
+        coin_name=market_name[4:len(market_name)]
+        usd_coinname=market_name[5:len(market_name)]
+        hash_dictionary={}
+        hash_dictionary=pickle_file
+
+        if str(datas['result'][x]['Summary']['MarketName'][0:3]) == 'BTC':
+            bc+=1
+            btc=Price.objects.create(koin_id=Coin.objects.get(koin_name=str(coin_name)),
+                                     kur_id=Kur.objects.get(kur_name="BTC"),
+                                     last=datas['result'][x]['Summary']['Last'],
+                                     high=datas['result'][x]['Summary']['High'],
+                                     low=datas['result'][x]['Summary']['Low'],
+                                     time=starting_time,
+                                     base_volume=datas['result'][x]['Summary']['BaseVolume'],
+                                     volume=datas['result'][x]['Summary']['Volume'],
+                                     change=((datas['result'][x]['Summary']['Last']-hash_dictionary[datas['result'][x]['Summary']['MarketName']])*100)/datas['result'][x]['Summary']['Last'])
+
+
+        elif str(datas['result'][x]['Summary']['MarketName'][0:3]) == 'ETH':
+            et+=1
+            eth=Price.objects.create(koin_id=Coin.objects.get(koin_name=str(coin_name)),
+                                    kur_id=Kur.objects.get(kur_name="ETH"),
+                                    last=datas['result'][x]['Summary']['Last'],
+                                    high=datas['result'][x]['Summary']['High'],
+                                    low=datas['result'][x]['Summary']['Low'],
+                                    time=starting_time,
+                                    base_volume=datas['result'][x]['Summary']['BaseVolume'],
+                                    volume=datas['result'][x]['Summary']['Volume'],
+                                    change=((datas['result'][x]['Summary']['Last']-hash_dictionary[datas['result'][x]['Summary']['MarketName']])*100)/datas['result'][x]['Summary']['Last'])
+
+        elif str(datas['result'][x]['Summary']['MarketName'][0:4]) == 'USDT':
+            us+=1
+            usd=Price.objects.create(koin_id=Coin.objects.get(koin_name=str(usd_coinname)),
+                                   kur_id=Kur.objects.get(kur_name="USDT"),
+                                   last=datas['result'][x]['Summary']['Last'],
+                                   high=datas['result'][x]['Summary']['High'],
+                                   low=datas['result'][x]['Summary']['Low'],
+                                   time=starting_time,
+                                   base_volume=datas['result'][x]['Summary']['BaseVolume'],
+                                   volume=datas['result'][x]['Summary']['Volume'],
+                                   change=((datas['result'][x]['Summary']['Last']-hash_dictionary[datas['result'][x]['Summary']['MarketName']])*100)/datas['result'][x]['Summary']['Last'])
+
+
+    print("BTC:",bc,"ETH",et,"USDT",us)
+
+
+
+
+
+
 
 
 
