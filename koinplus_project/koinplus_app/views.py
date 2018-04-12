@@ -5,7 +5,9 @@ from django.http import JsonResponse
 from koinplus_app.models import *
 from rest_framework.authtoken.models import Token
 from .bittrex import *
+from .graphic import *
 from .initial_table import *
+from .getCoin import *
 
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -16,15 +18,31 @@ from rest_framework.decorators import api_view
 from .serializers import UserRegistrationSerializer,UserLoginSerializer,UserLogoutSerializer,TokenSerializer
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from bittrex.bittrex import Bittrex, API_V2_0
 
 
 
 def index(request):
-    # deneme()
-    control()
-    deneme()
-    # Coin.objects.all().delete()
     
+    deneme()
+    control()
+
+    # my_bittrex = Bittrex(None, None, api_version=API_V2_0)
+    # data=my_bittrex.get_market_summaries()
+    # hash_coin_twelve={}
+    # pickle_twelve_control(11,56,10,len(data['result']),hash_coin_twelve,'twelve_pickle1',data)
+
+    # start_date=timezone.now()
+    # my_bittrex = Bittrex(None, None, api_version=API_V2_0)
+    # data=my_bittrex.get_market_summaries()
+    #
+
+    # pickle_twelve_control(11,56,10,len(data['result']),hash_coin_twelve,'twelve_pickle1',data)
+
+    # price_dbsave(data,hash_coin_twelve,start_date)
+
+    # Coin.objects.all().delete()
+
     # return JsonResponse(control(),safe=False)
     return render(request,'index.html',{})
 
@@ -196,22 +214,16 @@ def top25(request,kur_type):
 def graphicData(request,kur_type,koin_type):
 
 
-
-
     data={
         'kur':kur_type,
-        'koin':koin_type
+        'koin':koin_type,
+        'price':five_seconds_graphic_response(koin_type,kur_type),
     }
     return JsonResponse(data,safe=False)
 
+def getSingleCoin(request,kur_name,coin_name):
+    data={
+         'single_coin_result':singleCoin(kur_name,coin_name),
 
-
-
-
-
-
-    # def api_get_usdt(request):
-    # x=Usdt.objects.all().order_by('id').values()
-    # usdt=list(x[len(x)-15:len(x)+15])
-    #
-    # return JsonResponse(usdt,safe=False)
+    }
+    return JsonResponse(data,safe=False)

@@ -15,11 +15,12 @@ from decimal import Decimal, DecimalException
 
 
 def deneme():
+
     threading.Timer(5.0,deneme).start()
     #
     # Price.objects.all().delete()
     try:
-
+        control()
         my_bittrex = Bittrex(None, None, api_version=API_V2_0)
         data=my_bittrex.get_market_summaries()
         start_date=timezone.now()
@@ -34,9 +35,15 @@ def deneme():
         et=0
         us=0
 
-        pickle_twelve_control(hash_date_hour,hash_date_minute,hash_date_sec,len(data['result']),hash_coin_twelve,'twelve_pickle',data)
-        twelve_pickle=pickle.load(open('twelve.pickle','rb'))
-        price_dbsave(data,twelve_pickle,start_date)
+
+        pickle_twelve_control(hash_date_hour,hash_date_minute,hash_date_sec,len(data['result']),hash_coin_twelve,'twelve_pickle1',data)
+
+        # pickle_twelve_control(hash_date_hour,hash_date_minute,hash_date_sec,len(data['result']),hash_coin_twelve,'twelve_pickle',data)
+
+        with open('twelve_pickle1','rb') as handle:
+            pickle1=pickle.load(handle)
+
+        price_dbsave(data,pickle1,start_date)
 
 
 
@@ -87,10 +94,11 @@ def control():
 
 
 def pickle_twelve_control(hour,minute,seconds,length,picklefile,picklefile_name,datas):
-    if hour==12 and minute==0 and seconds>1 and seconds<10:
+    if hour==11 and minute<60 and (seconds>1 or seconds<15):
         count=0
         for x in range(0,length,1):
-            picklefile[datas['result'][x]['MarketName']]=datas['result'][x]['Summary']['Last']
+            # picklefile[datas['result'][x]['MarketName']]=datas['result'][x]['Summary']['Last']
+            picklefile[datas['result'][x]['Summary']['MarketName']]=datas['result'][x]['Summary']['Last']
             count+=1
             pickle.dump(picklefile,open(picklefile_name,'wb'))
         print("Pickle File Güncellendi",count)
